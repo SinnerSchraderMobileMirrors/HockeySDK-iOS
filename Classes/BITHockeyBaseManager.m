@@ -226,27 +226,6 @@
   
   return parentViewController;
 }
-/* We won't use this for now until we have a more robust solution for displaying UIAlertController
-- (void)showAlertController:(UIViewController *)alertController {
-  
-  // always execute this on the main thread
-  dispatch_async(dispatch_get_main_queue(), ^{
-    UIViewController *parentViewController = [self visibleWindowRootViewController];
-    
-    // as per documentation this only works if called from within viewWillAppear: or viewDidAppear:
-    // in tests this also worked fine on iOS 6 and 7 but not on iOS 5 so we are still trying this
-    if ([parentViewController isKindOfClass:NSClassFromString(@"UIAlertController")] || [parentViewController isBeingPresented]) {
-      BITHockeyLog(@"WARNING: There is already a view controller being presented onto the parentViewController. Delaying presenting the new view controller by 0.5s.");
-      [self performSelector:@selector(showAlertController:) withObject:alertController afterDelay:0.5];
-      return;
-    }
-    
-    if (parentViewController) {
-      [parentViewController presentViewController:alertController animated:YES completion:nil];
-    }
-  });
-}
-*/
 
 - (void)showView:(UIViewController *)viewController {
   // if we compile Crash only, then BITHockeyBaseViewController is not included
