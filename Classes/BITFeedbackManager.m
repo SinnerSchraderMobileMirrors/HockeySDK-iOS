@@ -803,11 +803,11 @@ NSString *const kBITFeedbackUpdateAttachmentThumbnail = @"BITFeedbackUpdateAttac
           dispatch_async(dispatch_get_main_queue(), ^{
           /*
           // Requires iOS 8
-          id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-          if (uialertcontrollerClass) {
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackNewMessageTitle")
+          id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+          if (bitalertcontrollerClass) {
+            BITAlertController *alertController = [BITAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackNewMessageTitle")
                                                                                      message:BITHockeyLocalizedString(@"HockeyFeedbackNewMessageText")
-                                                                              preferredStyle:UIAlertControllerStyleAlert];
+                                                                              preferredStyle:BITAlertControllerStyleAlert];
             
             UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackIgnore")
                                                                    style:UIAlertActionStyleCancel

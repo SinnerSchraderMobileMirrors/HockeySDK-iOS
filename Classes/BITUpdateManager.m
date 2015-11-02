@@ -36,6 +36,7 @@
 
 #import "HockeySDKPrivate.h"
 #import "BITHockeyHelper.h"
+#import "BITAlertController.h"
 
 #import "BITHockeyBaseManagerPrivate.h"
 #import "BITUpdateManagerPrivate.h"
@@ -93,24 +94,15 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
   
   // only show error if we enable that
   if (_showFeedback) {
-    /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-    // requires iOS 8
-    id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-    if (uialertcontrollerClass) {
-      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"UpdateError")
-                                                                               message:[error localizedDescription]
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-      
-      
-      UIAlertAction *okAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
-                                                         style:UIAlertActionStyleDefault
+    // Requires iOS 8
+    id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+    if (bitalertcontrollerClass) {
+      BITAlertController *alertController = [BITAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"UpdateError")
+                                                                               message:[error localizedDescription]];
+      [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
                                                        handler:^(UIAlertAction * action) {}];
-      
-      [alertController addAction:okAction];
-      
-      [self showAlertController:alertController];
+      [alertController show];
     } else {
-     */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       UIAlertView *alert = [[UIAlertView alloc] initWithTitle:BITHockeyLocalizedString(@"UpdateError")
@@ -120,7 +112,7 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
                                             otherButtonTitles:nil];
       [alert show];
 #pragma clang diagnostic pop
-    /*}*/
+    }
     _showFeedback = NO;
   }
 }
@@ -559,42 +551,29 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
     NSString *title = BITHockeyLocalizedString(@"UpdateAvailable");
     NSString *message = [NSString stringWithFormat:BITHockeyLocalizedString(@"UpdateAlertMandatoryTextWithAppVersion"), [self.newestAppVersion nameAndVersionString]];
     if ([self hasNewerMandatoryVersion]) {
-      /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-      // requires iOS 8
-      id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-      if (uialertcontrollerClass) {
+      // Requires iOS 8
+      id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+      if (bitalertcontrollerClass) {
         __weak typeof(self) weakSelf = self;
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
-                                                                                 message:message
-                                                                          preferredStyle:UIAlertControllerStyleAlert];
-        
-        
-        UIAlertAction *showAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"UpdateShow")
-                                                             style:UIAlertActionStyleDefault
-                                                           handler:^(UIAlertAction * action) {
-                                                             typeof(self) strongSelf = weakSelf;
-                                                             _updateAlertShowing = NO;
-                                                             if (strongSelf.blockingView) {
-                                                               [strongSelf.blockingView removeFromSuperview];
-                                                             }
-                                                             [strongSelf showUpdateView];
-                                                           }];
-        
-        [alertController addAction:showAction];
-        
-        UIAlertAction *installAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"UpdateInstall")
-                                                                style:UIAlertActionStyleDefault
-                                                              handler:^(UIAlertAction * action) {
-                                                                typeof(self) strongSelf = weakSelf;
-                                                                _updateAlertShowing = NO;
-                                                                  (void)[strongSelf initiateAppDownload];
-                                                              }];
-        
-        [alertController addAction:installAction];
-      
-        [self showAlertController:alertController];
+        BITAlertController *alertController = [BITAlertController alertControllerWithTitle:title
+                                                                                   message:message];
+        [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"UpdateShow")
+                                           handler:^(UIAlertAction * action) {
+                                             typeof(self) strongSelf = weakSelf;
+                                             _updateAlertShowing = NO;
+                                             if (strongSelf.blockingView) {
+                                               [strongSelf.blockingView removeFromSuperview];
+                                             }
+                                             [strongSelf showUpdateView];
+                                           }];
+        [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"UpdateInstall")
+                                           handler:^(UIAlertAction * action) {
+                                             typeof(self) strongSelf = weakSelf;
+                                             _updateAlertShowing = NO;
+                                             (void)[strongSelf initiateAppDownload];
+                                           }];
+        [alertController show];
       } else {
-       */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
@@ -606,60 +585,43 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
         [alertView setTag:BITUpdateAlertViewTagMandatoryUpdate];
         [alertView show];
 #pragma clang diagnostic pop
-      /*}*/
+      }
       _updateAlertShowing = YES;
     } else {
       message = [NSString stringWithFormat:BITHockeyLocalizedString(@"UpdateAlertTextWithAppVersion"), [self.newestAppVersion nameAndVersionString]];
-      /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-      // requires iOS 8
-      id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-      if (uialertcontrollerClass) {
+      // Requires iOS 8
+      id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+      if (bitalertcontrollerClass) {
         __weak typeof(self) weakSelf = self;
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
-                                                                                 message:message
-                                                                          preferredStyle:UIAlertControllerStyleAlert];
-        
-        
-        UIAlertAction *ignoreAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"UpdateIgnore")
-                                                               style:UIAlertActionStyleCancel
-                                                             handler:^(UIAlertAction * action) {
-                                                               typeof(self) strongSelf = weakSelf;
-                                                               _updateAlertShowing = NO;
-                                                               if ([strongSelf expiryDateReached] && !strongSelf.blockingView) {
-                                                                 [strongSelf alertFallback:_blockingScreenMessage];
-                                                               }
-                                                         }];
-        
-        [alertController addAction:ignoreAction];
-        
-        UIAlertAction *showAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"UpdateShow")
-                                                             style:UIAlertActionStyleDefault
-                                                           handler:^(UIAlertAction * action) {
-                                                             typeof(self) strongSelf = weakSelf;
-                                                             _updateAlertShowing = NO;
-                                                             if (strongSelf.blockingView) {
-                                                               [strongSelf.blockingView removeFromSuperview];
-                                                             }
-                                                             [strongSelf showUpdateView];
-                                                           }];
-        
-        [alertController addAction:showAction];
-        
+        BITAlertController *alertController = [BITAlertController alertControllerWithTitle:title
+                                                                                   message:message];
+        [alertController addCancelActionWithTitle:BITHockeyLocalizedString(@"UpdateIgnore")
+                                          handler:^(UIAlertAction * action) {
+                                            typeof(self) strongSelf = weakSelf;
+                                            _updateAlertShowing = NO;
+                                            if ([strongSelf expiryDateReached] && !strongSelf.blockingView) {
+                                              [strongSelf alertFallback:_blockingScreenMessage];
+                                            }
+                                          }];
+        [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"UpdateShow")
+                                           handler:^(UIAlertAction * action) {
+                                             typeof(self) strongSelf = weakSelf;
+                                             _updateAlertShowing = NO;
+                                             if (strongSelf.blockingView) {
+                                               [strongSelf.blockingView removeFromSuperview];
+                                             }
+                                             [strongSelf showUpdateView];
+                                           }];
         if (self.isShowingDirectInstallOption) {
-          UIAlertAction *installAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"UpdateInstall")
-                                                                  style:UIAlertActionStyleDefault
-                                                                handler:^(UIAlertAction * action) {
-                                                                  typeof(self) strongSelf = weakSelf;
-                                                                  _updateAlertShowing = NO;
-                                                                  (void)[strongSelf initiateAppDownload];
-                                                                }];
-          
-          [alertController addAction:installAction];
+          [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"UpdateInstall")
+                                             handler:^(UIAlertAction * action) {
+                                               typeof(self) strongSelf = weakSelf;
+                                               _updateAlertShowing = NO;
+                                               (void)[strongSelf initiateAppDownload];
+                                             }];
         }
-        
-        [self showAlertController:alertController ];
+        [alertController show];
       } else {
-       */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
@@ -674,7 +636,7 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
         [alertView setTag:BITUpdateAlertViewTagDefaultUpdate];
         [alertView show];
 #pragma clang diagnostic pop
-      /*}*/
+      }
       _updateAlertShowing = YES;
     }
   }
@@ -748,39 +710,28 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
 
 // nag the user with neverending alerts if we cannot find out the window for presenting the covering sheet
 - (void)alertFallback:(NSString *)message {
-  /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-  // requires iOS 8
-  id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-  if (uialertcontrollerClass) {
+  // Requires iOS 8
+  id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+  if (bitalertcontrollerClass) {
     __weak typeof(self) weakSelf = self;
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                                                             message:message
-                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    BITAlertController *alertController = [BITAlertController alertControllerWithTitle:nil
+                                                                             message:message];
     
     
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
-                                                       style:UIAlertActionStyleDefault
+    [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
                                                      handler:^(UIAlertAction * action) {
                                                        typeof(self) strongSelf = weakSelf;
                                                        [strongSelf alertFallback:_blockingScreenMessage];
                                                      }];
-    
-    [alertController addAction:okAction];
-    
     if (!self.disableUpdateCheckOptionWhenExpired && [message isEqualToString:_blockingScreenMessage]) {
-      UIAlertAction *checkAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"UpdateButtonCheck")
-                                                            style:UIAlertActionStyleDefault
+      [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"UpdateButtonCheck")
                                                           handler:^(UIAlertAction * action) {
                                                             typeof(self) strongSelf = weakSelf;
                                                             [strongSelf checkForUpdateForExpiredVersion];
                                                           }];
-      
-      [alertController addAction:checkAction];
     }
-    
-    [self showAlertController:alertController];
+    [alertController show];
   } else {
-   */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
@@ -796,7 +747,7 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
     
     [alertView setTag:BITUpdateAlertViewTagNeverEndingAlertView];
     [alertView show];
-  /*}*/
+  }
 }
 
 #pragma mark - RequestComments
@@ -925,23 +876,15 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
   }
   
 #if TARGET_IPHONE_SIMULATOR
-  /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-  // requires iOS 8
-  id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-  if (uialertcontrollerClass) {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"UpdateWarning")
-                                                                             message:BITHockeyLocalizedString(@"UpdateSimulatorMessage")
-                                                                      preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
-                                                       style:UIAlertActionStyleDefault
-                                                     handler:^(UIAlertAction * action) {}];
-    
-    [alertController addAction:okAction];
-    
-    [self showAlertController:alertController];
+  // Requires iOS 8
+  id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+  if (bitalertcontrollerClass) {
+    BITAlertController *alertController = [BITAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"UpdateWarning")
+                                                                               message:BITHockeyLocalizedString(@"UpdateSimulatorMessage")];
+    [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
+                                       handler:nil];
+    [alertController show];
   } else {
-   */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:BITHockeyLocalizedString(@"UpdateWarning")
@@ -951,7 +894,7 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
                                           otherButtonTitles:nil];
     [alert show];
 #pragma clang diagnostic pop
-  /*}*/
+  }
   return NO;
 
 #else
@@ -1100,31 +1043,23 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
           versionString = [shortVersionString length] ? [NSString stringWithFormat:@"(%@)", versionString] : versionString;
           NSString *currentVersionString = [NSString stringWithFormat:@"%@ %@ %@%@", self.newestAppVersion.name, BITHockeyLocalizedString(@"UpdateVersion"), shortVersionString, versionString];
           NSString *alertMsg = [NSString stringWithFormat:BITHockeyLocalizedString(@"UpdateNoUpdateAvailableMessage"), currentVersionString];
-          /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-          // requires iOS 8
-          id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-          if (uialertcontrollerClass) {
+          // Requires iOS 8
+          id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+          if (bitalertcontrollerClass) {
             __weak typeof(self) weakSelf = self;
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"UpdateNoUpdateAvailableTitle")
-                                                                                     message:alertMsg
-                                                                              preferredStyle:UIAlertControllerStyleAlert];
+            BITAlertController *alertController = [BITAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"UpdateNoUpdateAvailableTitle")
+                                                                                       message:alertMsg];
             
-            
-            UIAlertAction *okAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction * action) {
-                                                               typeof(self) strongSelf = weakSelf;
-                                                               _updateAlertShowing = NO;
-                                                               if ([strongSelf expiryDateReached] && !strongSelf.blockingView) {
-                                                                 [strongSelf alertFallback:_blockingScreenMessage];
-                                                               }
-                                                             }];
-            
-            [alertController addAction:okAction];
-            
-            [self showAlertController:alertController];
+            [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
+                                               handler:^(UIAlertAction * action) {
+                                                 typeof(self) strongSelf = weakSelf;
+                                                 _updateAlertShowing = NO;
+                                                 if ([strongSelf expiryDateReached] && !strongSelf.blockingView) {
+                                                   [strongSelf alertFallback:_blockingScreenMessage];
+                                                 }
+                                               }];
+            [alertController show];
           } else {
-           */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:BITHockeyLocalizedString(@"UpdateNoUpdateAvailableTitle")
@@ -1134,7 +1069,7 @@ typedef NS_ENUM(NSInteger, BITUpdateAlertViewTag) {
                                                   otherButtonTitles:nil];
             [alert show];
 #pragma clang diagnostic pop
-          /*}*/
+          }
         }
         
         if (self.isUpdateAvailable && (self.alwaysShowUpdateReminder || newVersionDiffersFromCachedVersion || [self hasNewerMandatoryVersion])) {

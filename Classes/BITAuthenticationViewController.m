@@ -34,6 +34,7 @@
 #import "BITAuthenticator_Private.h"
 #import "HockeySDKPrivate.h"
 #import "BITHockeyHelper.h"
+#import "BITAlertController.h"
 #import "BITHockeyAppClient.h"
 
 @interface BITAuthenticationViewController ()<UITextFieldDelegate> {
@@ -295,25 +296,15 @@
                                        //controller should dismiss us shortly..
                                      } else {
                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                         
-                                         /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-                                          // requires iOS 8
-                                          id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-                                          if (uialertcontrollerClass) {
-                                          UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                          message:error.localizedDescription
-                                          preferredStyle:UIAlertControllerStyleAlert];
-                                          
-                                          
-                                          UIAlertAction *okAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"OK")
-                                          style:UIAlertActionStyleCancel
-                                          handler:^(UIAlertAction * action) {}];
-                                          
-                                          [alertController addAction:okAction];
-                                          
-                                          [self presentViewController:alertController animated:YES completion:nil];
+                                          // Requires iOS 8
+                                          id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+                                          if (bitalertcontrollerClass) {
+                                            BITAlertController *alertController = [BITAlertController alertControllerWithTitle:nil
+                                                                                                                       message:error.localizedDescription];
+                                            [alertController addCancelActionWithTitle:@"OK" handler:nil];
+                                            [alertController show];
                                           } else {
-                                          */
+                                          
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
                                          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
@@ -323,7 +314,7 @@
                                                                                    otherButtonTitles:nil];
                                          [alertView show];
 #pragma clang diagnostic pop
-                                         /*}*/
+                                         }
                                          typeof(self) strongSelf = weakSelf;
                                          [strongSelf setLoginUIEnabled:YES];
                                        });

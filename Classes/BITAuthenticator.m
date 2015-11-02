@@ -37,6 +37,7 @@
 #import "BITHTTPOperation.h"
 #import "BITHockeyAppClient.h"
 #import "BITHockeyHelper.h"
+#import "BITAlertController.h"
 #import "BITHockeyBaseManagerPrivate.h"
 
 #include <sys/stat.h>
@@ -260,40 +261,32 @@ static unsigned char kBITPNGEndChunk[4] = {0x49, 0x45, 0x4e, 0x44};
         [self dismissAuthenticationControllerAnimated:YES completion:nil];
       } else {
         BITHockeyLog(@"Validation failed with error: %@", error);
-        /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-         // requires iOS 8
-         id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-         if (uialertcontrollerClass) {
-         __weak typeof(self) weakSelf = self;
-         
-         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-         message:error.localizedDescription
-         preferredStyle:UIAlertControllerStyleAlert];
-         
-         
-         UIAlertAction *okAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
-         style:UIAlertActionStyleDefault
-         handler:^(UIAlertAction * action) {
-         typeof(self) strongSelf = weakSelf;
-         [strongSelf validate];
-         }];
-         
-         [alertController addAction:okAction];
-         
-         [self showAlertController:alertController];
-         } else {
-         */
+        // Requires iOS 8
+        id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+        if (bitalertcontrollerClass) {
+          __weak typeof(self) weakSelf = self;
+          
+          BITAlertController *alertController = [BITAlertController alertControllerWithTitle:nil
+                                                                                     message:error.localizedDescription];
+          
+          [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"HockeyOK")
+                                             handler:^(UIAlertAction * action) {
+                                               typeof(self) strongSelf = weakSelf;
+                                               [strongSelf validate];
+                                             }];
+          [alertController show];
+        } else {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
-                                                            message:error.localizedDescription
-                                                           delegate:self
-                                                  cancelButtonTitle:BITHockeyLocalizedString(@"HockeyOK")
-                                                  otherButtonTitles:nil];
-        [alertView setTag:0];
-        [alertView show];
+          UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                              message:error.localizedDescription
+                                                             delegate:self
+                                                    cancelButtonTitle:BITHockeyLocalizedString(@"HockeyOK")
+                                                    otherButtonTitles:nil];
+          [alertView setTag:0];
+          [alertView show];
 #pragma clang diagnostic pop
-        /*}*/
+        }
       }
     });
   }];

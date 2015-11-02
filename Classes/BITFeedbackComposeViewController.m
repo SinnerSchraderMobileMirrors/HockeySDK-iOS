@@ -41,6 +41,7 @@
 #import "BITHockeyBaseManagerPrivate.h"
 
 #import "BITHockeyHelper.h"
+#import "BITAlertController.h"
 
 #import "BITImageAnnotationViewController.h"
 #import "BITHockeyAttachment.h"
@@ -538,47 +539,31 @@
   NSInteger index = [self.attachmentScrollViewImageViews indexOfObject:sender];
   
   self.selectedAttachmentIndex = (self.attachmentScrollViewImageViews.count - index - 1);
-  /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-  // requires iOS 8
-  id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-  if (uialertcontrollerClass) {
+  // Requires iOS 8
+  id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+  if (bitalertcontrollerClass) {
     __weak typeof(self) weakSelf = self;
-
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                                                             message:nil
-                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
     
-    
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackComposeAttachmentCancel")
-                                                           style:UIAlertActionStyleCancel
-                                                         handler:^(UIAlertAction * action) {
-                                                           typeof(self) strongSelf = weakSelf;
-                                                           [strongSelf cancelAction];
-                                                         }];
-    
-    [alertController addAction:cancelAction];
-    
-    UIAlertAction *editAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackComposeAttachmentEdit")
-                                                         style:UIAlertActionStyleDefault
-                                                       handler:^(UIAlertAction * action) {
-                                                         typeof(self) strongSelf = weakSelf;
-                                                         [strongSelf editAction];
-                                                       }];
-    
-    [alertController addAction:editAction];
-    
-    UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackComposeAttachmentDelete")
-                                                         style:UIAlertActionStyleDestructive
-                                                       handler:^(UIAlertAction * action) {
-                                                         typeof(self) strongSelf = weakSelf;
-                                                         [strongSelf deleteAction];
-                                                       }];
-    
-    [alertController addAction:deleteAction];
-    
-    [self presentViewController:alertController animated:YES completion:nil];
+    BITAlertController *alertController = [BITAlertController alertControllerWithTitle:nil
+                                                                               message:nil
+                                                                        preferredStyle:UIAlertControllerStyleActionSheet];
+    [alertController addCancelActionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackComposeAttachmentCancel")
+                                      handler:^(UIAlertAction * action) {
+                                        typeof(self) strongSelf = weakSelf;
+                                        [strongSelf cancelAction];
+                                      }];
+    [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackComposeAttachmentEdit")
+                                       handler:^(UIAlertAction * action) {
+                                         typeof(self) strongSelf = weakSelf;
+                                         [strongSelf editAction];
+                                       }];
+    [alertController addDestructiveActionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackComposeAttachmentDelete")
+                                           handler:^(UIAlertAction * action) {
+                                             typeof(self) strongSelf = weakSelf;
+                                             [strongSelf deleteAction];
+                                           }];
+    [alertController show];
   } else {
-   */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle: nil
@@ -587,9 +572,9 @@
                                              destructiveButtonTitle: BITHockeyLocalizedString(@"HockeyFeedbackComposeAttachmentDelete")
                                                   otherButtonTitles: BITHockeyLocalizedString(@"HockeyFeedbackComposeAttachmentEdit"), nil];
   
-  [actionSheet showFromRect: sender.frame inView: self.attachmentScrollView animated: YES];
+  [actionSheet showFromRect:sender.frame inView: self.attachmentScrollView animated: YES];
 #pragma clang diagnostic push
-  /*}*/
+  }
   
   _actionSheetVisible = YES;
   if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || ([[NSProcessInfo processInfo] respondsToSelector:@selector(isOperatingSystemAtLeastVersion:)] && [[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){9,0,0}])) {

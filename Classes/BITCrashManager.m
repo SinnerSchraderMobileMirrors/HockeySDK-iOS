@@ -37,6 +37,7 @@
 
 #import "HockeySDKPrivate.h"
 #import "BITHockeyHelper.h"
+#import "BITAlertController.h"
 #import "BITHockeyAppClient.h"
 
 #import "BITCrashAttachment.h"
@@ -1052,50 +1053,36 @@ static void uncaught_cxx_exception_handler(const BITCrashUncaughtCXXExceptionInf
       if (_alertViewHandler) {
         _alertViewHandler();
       } else {
-        /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-        // requires iOS 8
-        id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-        if (uialertcontrollerClass) {
+        // Requires iOS 8
+        id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+        if (bitalertcontrollerClass) {
           __weak typeof(self) weakSelf = self;
           
-          UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:BITHockeyLocalizedString(@"CrashDataFoundTitle"), appName]
-                                                                                   message:alertDescription
-                                                                            preferredStyle:UIAlertControllerStyleAlert];
+          BITAlertController *alertController = [BITAlertController alertControllerWithTitle:[NSString stringWithFormat:BITHockeyLocalizedString(@"CrashDataFoundTitle"), appName]
+                                                                                     message:alertDescription];
           
+          [alertController addCancelActionWithTitle:BITHockeyLocalizedString(@"CrashDontSendReport")
+                                            handler:^(UIAlertAction * action) {
+                                              typeof(self) strongSelf = weakSelf;
+                                              
+                                              [strongSelf handleUserInput:BITCrashManagerUserInputDontSend withUserProvidedMetaData:nil];
+                                            }];
           
-          UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"CrashDontSendReport")
-                                                                 style:UIAlertActionStyleCancel
-                                                               handler:^(UIAlertAction * action) {
-                                                                 typeof(self) strongSelf = weakSelf;
-                                                                 
-                                                                 [strongSelf handleUserInput:BITCrashManagerUserInputDontSend withUserProvidedMetaData:nil];
-                                                               }];
-          
-          [alertController addAction:cancelAction];
-          
-          UIAlertAction *sendAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"CrashSendReport")
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction * action) {
-                                                               typeof(self) strongSelf = weakSelf;
-                                                               [strongSelf handleUserInput:BITCrashManagerUserInputSend withUserProvidedMetaData:nil];
-                                                             }];
-          
-          [alertController addAction:sendAction];
+          [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"CrashSendReport")
+                                             handler:^(UIAlertAction * action) {
+                                               typeof(self) strongSelf = weakSelf;
+                                               [strongSelf handleUserInput:BITCrashManagerUserInputSend withUserProvidedMetaData:nil];
+                                             }];
           
           if (self.shouldShowAlwaysButton) {
-            UIAlertAction *alwaysSendAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"CrashSendReportAlways")
-                                                                       style:UIAlertActionStyleDefault
-                                                                     handler:^(UIAlertAction * action) {
-                                                                       typeof(self) strongSelf = weakSelf;
-                                                                       [strongSelf handleUserInput:BITCrashManagerUserInputAlwaysSend withUserProvidedMetaData:nil];
-                                                                     }];
-            
-            [alertController addAction:alwaysSendAction];
+            [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"CrashSendReportAlways")
+                                               handler:^(UIAlertAction * action) {
+                                                 typeof(self) strongSelf = weakSelf;
+                                                 [strongSelf handleUserInput:BITCrashManagerUserInputAlwaysSend withUserProvidedMetaData:nil];
+                                               }];
           }
-          
-          [self showAlertController:alertController];
+          [alertController show];
         } else {
-         */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
           UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:BITHockeyLocalizedString(@"CrashDataFoundTitle"), appName]
@@ -1110,7 +1097,7 @@ static void uncaught_cxx_exception_handler(const BITCrashUncaughtCXXExceptionInf
           
           [alertView show];
 #pragma clang diagnostic pop
-        /*}*/
+        }
       }
 #endif /* !defined (HOCKEYSDK_CONFIGURATION_ReleaseCrashOnlyExtensions) */
       

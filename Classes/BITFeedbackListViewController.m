@@ -46,6 +46,7 @@
 #import "BITHockeyBaseManagerPrivate.h"
 
 #import "BITHockeyHelper.h"
+#import "BITAlertController.h"
 #import <QuartzCore/QuartzCore.h>
 #import <QuickLook/QuickLook.h>
 
@@ -289,10 +290,9 @@
 }
 
 - (void)deleteAllMessagesAction:(id)sender {
-  /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-  // requires iOS 8
-  id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-  if (uialertcontrollerClass) {
+  // Requires iOS 8
+  id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+  if (bitalertcontrollerClass) {
     
     NSString *title = BITHockeyLocalizedString(@"HockeyFeedbackListButtonDeleteAllMessages");
     NSString *message = BITHockeyLocalizedString(@"HockeyFeedbackListDeleteAllTitle");
@@ -304,30 +304,18 @@
     }
     __weak typeof(self) weakSelf = self;
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
-                                                                             message:message
-                                                                      preferredStyle:controllerStyle];
-    
-    
-    UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackListDeleteAllCancel")
-                                                           style:UIAlertActionStyleCancel
-                                                         handler:^(UIAlertAction * action) {}];
-    
-    [alertController addAction:cancelAction];
-    
-    UIAlertAction* deleteAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackListDeleteAllDelete")
-                                                           style:UIAlertActionStyleDestructive
-                                                         handler:^(UIAlertAction * action) {
-                                                           typeof(self) strongSelf = weakSelf;
-                                                           [strongSelf deleteAllMessages];
-                                                         }];
-    
-    [alertController addAction:deleteAction];
-    
-    
-    [self presentViewController:alertController animated:YES completion:nil];
+    BITAlertController *alertController = [BITAlertController alertControllerWithTitle:title
+                                                                               message:message
+                                                                        preferredStyle:controllerStyle];
+    [alertController addCancelActionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackListDeleteAllCancel")
+                                      handler:nil];
+    [alertController addDestructiveActionWithTitle:BITHockeyLocalizedString(@"HockeyFeedbackListDeleteAllDelete")
+                                           handler:^(UIAlertAction * action) {
+                                             typeof(self) strongSelf = weakSelf;
+                                             [strongSelf deleteAllMessages];
+                                           }];
+    [alertController show];
   } else {
-   */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
@@ -351,7 +339,7 @@
       [deleteAction show];
     }
 #pragma clang diagnostic pop
-  /*}*/
+  }
 }
 
 - (UIView*) viewForShowingActionSheetOnPhone {
@@ -831,15 +819,15 @@
 
 - (void)attributedLabel:(BITAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
   /*
-  // requires iOS 8
-  id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-  if (uialertcontrollerClass) {
-    UIAlertControllerStyle controllerStyle = UIAlertControllerStyleAlert;
+  // Requires iOS 8
+  id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+  if (bitalertcontrollerClass) {
+    BITAlertControllerStyle controllerStyle = BITAlertControllerStyleAlert;
     if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
-      controllerStyle = UIAlertControllerStyleActionSheet;
+      controllerStyle = BITAlertControllerStyleActionSheet;
     }
     
-    UIAlertController *linkAction = [UIAlertController alertControllerWithTitle:[url absoluteString]
+    BITAlertController *linkAction = [BITAlertController alertControllerWithTitle:[url absoluteString]
                                                                         message:nil
                                                                  preferredStyle:controllerStyle];
     

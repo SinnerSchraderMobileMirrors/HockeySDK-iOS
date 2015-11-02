@@ -34,6 +34,7 @@
 
 #import "HockeySDKPrivate.h"
 #import "BITHockeyHelper.h"
+#import "BITAlertController.h"
 
 #import "BITHockeyBaseManagerPrivate.h"
 #import "BITStoreUpdateManagerPrivate.h"
@@ -435,47 +436,31 @@
 - (void)showUpdateAlert {
   if (!_updateAlertShowing) {
     NSString *versionString = [NSString stringWithFormat:@"%@ %@", BITHockeyLocalizedString(@"UpdateVersion"), _newStoreVersion];
-    /* We won't use this for now until we have a more robust solution for displaying UIAlertController
-    // requires iOS 8
-    id uialertcontrollerClass = NSClassFromString(@"UIAlertController");
-    if (uialertcontrollerClass) {
+    // Requires iOS 8
+    id bitalertcontrollerClass = NSClassFromString(@"BITAlertController");
+    if (bitalertcontrollerClass) {
       __weak typeof(self) weakSelf = self;
       
-      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"UpdateAvailable")
-                                                                               message:[NSString stringWithFormat:BITHockeyLocalizedString(@"UpdateAlertTextWithAppVersion"), versionString]
-                                                                        preferredStyle:UIAlertControllerStyleAlert];
-      
-      
-      UIAlertAction *ignoreAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"UpdateIgnore")
-                                                             style:UIAlertActionStyleCancel
-                                                           handler:^(UIAlertAction * action) {
-                                                             typeof(self) strongSelf = weakSelf;
-                                                             [strongSelf ignoreAction];
-                                                           }];
-      
-      [alertController addAction:ignoreAction];
-      
-      UIAlertAction *remindAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"UpdateRemindMe")
-                                                             style:UIAlertActionStyleDefault
-                                                           handler:^(UIAlertAction * action) {
-                                                             typeof(self) strongSelf = weakSelf;
-                                                             [strongSelf remindAction];
-                                                           }];
-      
-      [alertController addAction:remindAction];
-      
-      UIAlertAction *showAction = [UIAlertAction actionWithTitle:BITHockeyLocalizedString(@"UpdateShow")
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction * action) {
-                                                           typeof(self) strongSelf = weakSelf;
-                                                           [strongSelf showAction];
-                                                         }];
-      
-      [alertController addAction:showAction];
-      
-      [self showAlertController:alertController];
+      NSString *updateAvailableMessage = [NSString stringWithFormat:BITHockeyLocalizedString(@"UpdateAlertTextWithAppVersion"), versionString];
+      BITAlertController *alertController = [BITAlertController alertControllerWithTitle:BITHockeyLocalizedString(@"UpdateAvailable")
+                                                                                 message:updateAvailableMessage];
+      [alertController addCancelActionWithTitle:BITHockeyLocalizedString(@"UpdateIgnore")
+                                        handler:^(UIAlertAction * action) {
+                                          typeof(self) strongSelf = weakSelf;
+                                          [strongSelf ignoreAction];
+                                        }];
+      [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"UpdateRemindMe")
+                                         handler:^(UIAlertAction * action) {
+                                           typeof(self) strongSelf = weakSelf;
+                                           [strongSelf remindAction];
+                                         }];
+      [alertController addDefaultActionWithTitle:BITHockeyLocalizedString(@"UpdateShow")
+                                         handler:^(UIAlertAction * action) {
+                                           typeof(self) strongSelf = weakSelf;
+                                           [strongSelf showAction];
+                                         }];
+      [alertController show];
     } else {
-     */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:BITHockeyLocalizedString(@"UpdateAvailable")
@@ -486,8 +471,7 @@
                                 ];
       [alertView show];
 #pragma clang diagnostic pop
-    /*}*/
-    
+    }
     _updateAlertShowing = YES;
   }
 }
