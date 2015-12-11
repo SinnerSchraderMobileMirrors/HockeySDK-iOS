@@ -32,17 +32,19 @@ static NSMutableArray *alertsToBePresented;
 static dispatch_queue_t alertsQueue;
 
 + (void)initialize {
-  alertIsBeingPresented = NO;
-  alertsToBePresented = @[].mutableCopy;
-  alertsQueue = dispatch_queue_create(BITAlertsDispatchQueue, DISPATCH_QUEUE_CONCURRENT);
-  
-  UIViewController *emptyViewController = [UIViewController new];
-  [emptyViewController.view setBackgroundColor:[UIColor clearColor]];
-  
-  window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  window.rootViewController = emptyViewController;
-  window.backgroundColor = [UIColor clearColor];
-  window.windowLevel = UIWindowLevelAlert + 1;
+  if (self == BITAlertController.class) {
+    alertIsBeingPresented = NO;
+    alertsToBePresented = @[].mutableCopy;
+    alertsQueue = dispatch_queue_create(BITAlertsDispatchQueue, DISPATCH_QUEUE_CONCURRENT);
+    
+    UIViewController *emptyViewController = [UIViewController new];
+    [emptyViewController.view setBackgroundColor:[UIColor clearColor]];
+    
+    window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    window.rootViewController = emptyViewController;
+    window.backgroundColor = [UIColor clearColor];
+    window.windowLevel = UIWindowLevelAlert + 1;
+  }
 }
 
 + (instancetype)alertControllerWithTitle:(NSString *)title message:(NSString *)message {
