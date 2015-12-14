@@ -26,10 +26,10 @@ static char *const BITAlertsDispatchQueue = "net.hockeyapp.alertsQueue";
 
 @implementation BITAlertController
 
-static UIWindow *window;
-static BOOL alertIsBeingPresented;
-static NSMutableArray *alertsToBePresented;
-static dispatch_queue_t alertsQueue;
+static UIWindow *window = nil;
+static BOOL alertIsBeingPresented = NO;
+static NSMutableArray *alertsToBePresented = nil;
+static dispatch_queue_t alertsQueue = nil;
 
 + (void)initialize {
   if (self == BITAlertController.class) {
