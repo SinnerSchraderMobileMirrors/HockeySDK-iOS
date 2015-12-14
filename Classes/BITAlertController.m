@@ -34,7 +34,7 @@ static dispatch_queue_t alertsQueue;
 + (void)initialize {
   if (self == BITAlertController.class) {
     alertIsBeingPresented = NO;
-    alertsToBePresented = @[].mutableCopy;
+    alertsToBePresented = [NSMutableArray array];
     alertsQueue = dispatch_queue_create(BITAlertsDispatchQueue, DISPATCH_QUEUE_CONCURRENT);
     
     UIViewController *emptyViewController = [UIViewController new];
