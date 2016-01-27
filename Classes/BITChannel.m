@@ -123,7 +123,7 @@ static NSInteger const BITSchemaVersion  = 2;
   NSError *error;
   NSData *data = [NSJSONSerialization dataWithJSONObject:dictionary options:(NSJSONWritingOptions)0 error:&error];
   if (!data) {
-    BITHockeyLog(@"ERROR: JSONSerialization error: %@", error.localizedDescription);
+    BITHockeyLogError(@"ERROR: JSONSerialization error: %@", error.localizedDescription);
     return @"{}";
   } else {
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];

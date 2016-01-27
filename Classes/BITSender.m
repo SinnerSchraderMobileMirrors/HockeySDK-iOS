@@ -126,13 +126,13 @@ static NSUInteger const BITDefaultRequestLimit = 10;
 
   if (responseData && (responseData.length > 0) && [self shouldDeleteDataWithStatusCode:statusCode]) {
     //we delete data that was either sent successfully or if we have a non-recoverable error
-    BITHockeyLog(@"Sent data with status code: %ld", (long) statusCode);
-    BITHockeyLog(@"Response data:\n%@", [NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil]);
+    BITHockeyLogDebug(@"INFO: Sent data with status code: %ld", (long) statusCode);
+    BITHockeyLogDebug(@"INFO: Response data:\n%@", [NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil]);
     [self.persistence deleteFileAtPath:filePath];
     [self sendSavedData];
   } else {
-    BITHockeyLog(@"Sending telemetry data failed");
-    BITHockeyLog(@"Error description: %@", error.localizedDescription);
+    BITHockeyLogError(@"ERROR: Sending telemetry data failed");
+    BITHockeyLogError(@"Error description: %@", error.localizedDescription);
     [self.persistence giveBackRequestedFilePath:filePath];
   }
 }
