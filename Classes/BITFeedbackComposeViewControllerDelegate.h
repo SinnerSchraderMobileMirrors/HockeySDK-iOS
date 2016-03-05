@@ -44,6 +44,8 @@ typedef NS_ENUM(NSUInteger, BITFeedbackComposeResult) {
 
 @class BITFeedbackComposeViewController;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  * The `BITFeedbackComposeViewControllerDelegate` formal protocol defines methods further configuring
  * the behaviour of `BITFeedbackComposeViewController`.
@@ -77,4 +79,7 @@ typedef NS_ENUM(NSUInteger, BITFeedbackComposeResult) {
  * @param composeViewController The `BITFeedbackComposeViewController` instance invoking this delegate
  */
 - (void)feedbackComposeViewControllerDidFinish:(BITFeedbackComposeViewController *)composeViewController __attribute__((deprecated("Use feedbackComposeViewController:didFinishWithResult: instead")));
+
 @end
+
+NS_ASSUME_NONNULL_END

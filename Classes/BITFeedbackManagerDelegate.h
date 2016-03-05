@@ -31,6 +31,8 @@
 
 @class BITFeedbackManager;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *	Delegate protocol which is notified about changes in the feedbackManager
  *  @TODO 
@@ -39,14 +41,6 @@
 @protocol BITFeedbackManagerDelegate <NSObject, BITFeedbackComposeViewControllerDelegate>
 
 @optional
-
-/**
- *	can be implemented to know when new feedback from the server arrived
- *
- *	@param	feedbackManager	The feedbackManager which did detect the new messages
- */
-- (void) feedbackManagerDidReceiveNewFeedback:(BITFeedbackManager*) feedbackManager;
-
 
 /**
  *  Can be implemented to control wether the feedback manager should automatically
@@ -60,7 +54,15 @@
  *
  *	@param	feedbackManager	The feedbackManager which did detect the new messages
  */
-- (BOOL) allowAutomaticFetchingForNewFeedbackForManager:(BITFeedbackManager *)feedbackManager;
+- (BOOL)allowAutomaticFetchingForNewFeedbackForManager:(BITFeedbackManager *)feedbackManager;
+
+
+/**
+ *	can be implemented to know when new feedback from the server arrived
+ *
+ *	@param	feedbackManager	The feedbackManager which did detect the new messages
+ */
+- (void)feedbackManagerDidReceiveNewFeedback:(BITFeedbackManager *)feedbackManager;
 
 
 /**
@@ -80,3 +82,5 @@
 - (nullable NSArray *)preparedItemsForFeedbackManager:(BITFeedbackManager *)feedbackManager;
 
 @end
+
+NS_ASSUME_NONNULL_END
