@@ -228,7 +228,16 @@ NSString *const kBITFeedbackUpdateAttachmentThumbnail = @"BITFeedbackUpdateAttac
 
 - (BITFeedbackComposeViewController *)feedbackComposeViewController {
   BITFeedbackComposeViewController *composeViewController = [[BITFeedbackComposeViewController alloc] init];
-  [composeViewController prepareWithItems:self.feedbackComposerPreparedItems];
+  
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
+  NSArray *preparedItems = self.feedbackComposerPreparedItems;
+#pragma clang diagnostic pop
+  if ([self.delegate respondsToSelector:@selector(preparedItemsForFeedbackManager:)]) {
+    preparedItems = [preparedItems arrayByAddingObjectsFromArray:[self.delegate preparedItemsForFeedbackManager:self]];
+  }
+  
+  [composeViewController prepareWithItems:preparedItems];
   [composeViewController setHideImageAttachmentButton:self.feedbackComposeHideImageAttachmentButton];
     
   // by default set the delegate to be identical to the one of BITFeedbackManager
