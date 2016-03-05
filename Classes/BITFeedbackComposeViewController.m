@@ -110,6 +110,10 @@
 
 - (void)prepareWithItems:(NSArray *)items {
   for (id item in items) {
+    if ([self.attachments containsObject:item] || [self.imageAttachments containsObject:item]) {
+      BITHockeyLog(@"Skipping duplicate feedback item: %@", item);
+      continue;
+    }
     if ([item isKindOfClass:[NSString class]]) {
       self.text = [(self.text ? self.text : @"") stringByAppendingFormat:@"%@%@", (self.text ? @" " : @""), item];
     } else if ([item isKindOfClass:[NSURL class]]) {
