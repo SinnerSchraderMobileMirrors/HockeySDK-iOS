@@ -395,7 +395,7 @@ and set the delegate:
 <a name="user-metrics"></a>
 ### 3.6 User Metrics
 
-HockeyApp automatically provides you with nice intelligible and informative metrics about how your app is used and by whom.
+HockeyApp automatically provides you with nice intelligible and informative metrics about how your app is used and by whom. Therefore, the HockeySDK for iOS starts a new session when the containing app is restarted (this means a 'cold start', i.e. when the app has not already been in memory prior to being launched) or when it has been in the background for more than 20 seconds and is opened again.
 
 Just in case you want to opt-out of this feature, there is a way to turn this functionality off:
 
