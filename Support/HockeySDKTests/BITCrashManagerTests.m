@@ -308,8 +308,8 @@
   // this old report doesn't have a marketing version present
   assertThat(_sut.lastSessionCrashDetails.appVersion, equalTo(nil));
   
-  [verifyCount(delegateMock, times(2)) applicationLogForCrashManager:_sut];
-  [verifyCount(delegateMock, times(2)) attachmentForCrashManager:_sut];
+  [verifyCount(delegateMock, times(1)) applicationLogForCrashManager:_sut];
+  [verifyCount(delegateMock, times(1)) attachmentForCrashManager:_sut];
   
   // we should have now 1 pending crash report
   assertThatBool([_sut hasPendingCrashReport], isTrue());
@@ -325,8 +325,8 @@
   // this old report doesn't have a marketing version present
   assertThat(_sut.lastSessionCrashDetails.appVersion, notNilValue());
   
-  [verifyCount(delegateMock, times(3)) applicationLogForCrashManager:_sut];
-  [verifyCount(delegateMock, times(3)) attachmentForCrashManager:_sut];
+  [verifyCount(delegateMock, times(1)) applicationLogForCrashManager:_sut];
+  [verifyCount(delegateMock, times(1)) attachmentForCrashManager:_sut];
   
   // we should have now 1 pending crash report
   assertThatBool([_sut hasPendingCrashReport], isTrue());
@@ -334,7 +334,7 @@
   
   // this is currently sending blindly, needs refactoring to test properly
   [_sut sendNextCrashReport];
-  [verifyCount(delegateMock, times(2)) crashManagerWillSendCrashReport:_sut];
+  [verifyCount(delegateMock, times(1)) crashManagerWillSendCrashReport:_sut];
   
   [_sut cleanCrashReports];
   
@@ -346,8 +346,8 @@
   // this old report doesn't have a marketing version present
   assertThat(_sut.lastSessionCrashDetails.appVersion, notNilValue());
   
-  [verifyCount(delegateMock, times(4)) applicationLogForCrashManager:_sut];
-  [verifyCount(delegateMock, times(4)) attachmentForCrashManager:_sut];
+  [verifyCount(delegateMock, times(1)) applicationLogForCrashManager:_sut];
+  [verifyCount(delegateMock, times(1)) attachmentForCrashManager:_sut];
   
   // we should have now 1 pending crash report
   assertThatBool([_sut hasPendingCrashReport], isTrue());
