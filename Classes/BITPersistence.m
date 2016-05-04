@@ -223,13 +223,13 @@ static NSUInteger const BITDefaultFileCount = 50;
     _directorySetupComplete = YES;
 
     //Exclude from Backup
-    if (![appSupportURL setResourceValue:@YES
+    if (![folderURL setResourceValue:@YES
                                   forKey:NSURLIsExcludedFromBackupKey
                                    error:&error]) {
-      BITHockeyLog(@"Error excluding %@ from backup %@", appSupportURL.lastPathComponent, error.localizedDescription);
+      BITHockeyLog(@"Error excluding %@ from backup %@", folderURL.lastPathComponent, error.localizedDescription);
     }
     else {
-      BITHockeyLog(@"Exclude %@ from backup", appSupportURL);
+      BITHockeyLog(@"Exclude %@ from backup", folderURL);
     }
   }
 }
