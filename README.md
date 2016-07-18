@@ -2,6 +2,11 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Version](http://cocoapod-badges.herokuapp.com/v/HockeySDK/badge.png)](http://cocoadocs.org/docsets/HockeySDK)
 
+## Version 4.0.2
+
+- [Changelog](http://www.hockeyapp.net/help/sdk/ios/4.0.2/docs/docs/Changelog.html)
+
+
 ## Version 4.0.1
 
 - [Changelog](http://www.hockeyapp.net/help/sdk/ios/4.0.1/docs/docs/Changelog.html)
